@@ -2,118 +2,119 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sai Clinic - Dr.Vinod(BHMS)</title>
+
 <style>
 body {
     font-family: Arial, sans-serif;
     background: #d9fdd3;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     margin: 0;
 }
+
+/* Responsive Chat Container */
 #chat-container {
-    width: 400px;
-    height: 750px;
+    width: 100%;
+    height: 100vh;
+    max-width: 500px;
+    margin: auto;
     background: #f0f0f0;
-    border-radius: 10px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
+
+/* Header */
 #chat-header {
     background-color: #128c7e;
     color: white;
-    padding: 15px;
+    padding: 10px;
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 16px;
+    flex-wrap: wrap;
 }
+
 #chat-header img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    border: 2px solid white;
 }
-#chat-header .status {
-    font-size: 12px;
-    color: #d9ffd9;
-}
+
+/* Chat Area */
 #chat {
     flex: 1;
     padding: 10px;
-    overflow-y: scroll;
+    overflow-y: auto;
     background: #ece5dd;
 }
+
+/* Message bubbles */
 .bubble {
     padding: 10px 15px;
     margin: 5px 0;
     border-radius: 20px;
     max-width: 75%;
     clear: both;
-    position: relative;
 }
+
 .user {
     background-color: #dcf8c6;
     float: right;
-    text-align: right;
 }
+
 .bot {
-    background-color: #ffffff;
+    background-color: #fff;
     float: left;
-    text-align: left;
-    border: 1px solid #ccc;
 }
+
+/* Input area */
 #input-area {
     display: flex;
-    border-top: 1px solid #ccc;
     padding: 10px;
     background: #f0f0f0;
 }
+
 #input {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     border-radius: 20px;
     border: 1px solid #ccc;
-    outline: none;
+    font-size: 16px;
 }
+
 #send {
     margin-left: 10px;
-    padding: 10px 15px;
+    padding: 12px;
     border-radius: 50%;
     border: none;
     background-color: #128c7e;
     color: white;
     cursor: pointer;
-    transition: 0.3s;
 }
-#send:hover { background-color: #0f785e; }
+
+/* Buttons */
 .btn {
-    padding: 8px 12px;
-    margin: 3px;
+    padding: 10px 15px;
+    margin: 5px;
     border-radius: 20px;
     border: none;
     cursor: pointer;
-    transition: 0.3s;
 }
-.btn:hover { opacity: 0.8; }
+
 .btn-online { background-color: #25d366; color: white; }
 .btn-home { background-color: #34b7f1; color: white; }
-#chat::-webkit-scrollbar { width: 6px; }
-#chat::-webkit-scrollbar-thumb { background-color: rgba(0,0,0,0.2); border-radius: 3px; }
+
 </style>
 </head>
+
 <body>
 
 <div id="chat-container">
     <div id="chat-header">
-        <img src="https://via.placeholder.com/40" alt="Dr.Vinod">
-        Sai Clinic - Dr.Vinod Salunkhe(BHMS & Ayurvdic)
-        <span class="status">● Online</span>
+        <img src="https://via.placeholder.com/40">
+        Sai Clinic - Dr.Vinod (BHMS & Ayurvedic)
     </div>
 
     <div id="chat"></div>
@@ -129,13 +130,12 @@ const chatDiv = document.getElementById("chat");
 const input = document.getElementById("input");
 const send = document.getElementById("send");
 
-// WhatsApp QR dynamic link
-const whatsappLink = "https://wa.me/919876543210?text=Hello%20Dr.%20Vinod,%20I%20want%20consultation";
+const whatsappLink = "https://wa.me/919876543210?text=Hello%20Doctor";
 const qrAPI = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(whatsappLink)}`;
 
 let state = "askName";
 let patientName = "", patientMobile = "", patientAddress = "", consultationType = "";
-let qrBubble = null; // Track QR element in chat
+let qrBubble = null;
 
 function addMessage(msg, sender) {
     const bubble = document.createElement("div");
@@ -147,8 +147,6 @@ function addMessage(msg, sender) {
 
 function addButtonOptions() {
     const container = document.createElement("div");
-    container.style.clear = "both";
-    container.style.margin = "5px 0";
 
     const btnOnline = document.createElement("button");
     btnOnline.className = "btn btn-online";
@@ -163,90 +161,75 @@ function addButtonOptions() {
     container.appendChild(btnOnline);
     container.appendChild(btnHome);
     chatDiv.appendChild(container);
-    chatDiv.scrollTop = chatDiv.scrollHeight;
 }
 
 function selectConsultation(type) {
     consultationType = type;
-    addMessage(consultationType, "user");
+    addMessage(type, "user");
 
-    if (consultationType === "Online") {
-        // Show QR dynamically inside chat
+    if (type === "Online") {
         qrBubble = document.createElement("div");
         qrBubble.style.textAlign = "center";
-        qrBubble.style.margin = "10px";
-        qrBubble.innerHTML = `<p>Scan this QR to chat with Dr. Vinod & pay ₹179:</p>
-                              <img src="${qrAPI}" style="width:200px; border:1px solid #ccc; border-radius:10px;">`;
+        qrBubble.innerHTML = `
+        <p>Scan QR & pay ₹179</p>
+        <img src="${qrAPI}" style="width:100%; max-width:250px;">
+        `;
         chatDiv.appendChild(qrBubble);
-        chatDiv.scrollTop = chatDiv.scrollHeight;
 
-        addMessage("Once payment is done, type 'Paid' to proceed.", "bot");
+        addMessage("After payment type 'Paid'", "bot");
         state = "awaitPayment";
     } else {
-        if (qrBubble) qrBubble.remove();
-        qrBubble = null;
         submitPatientInfo();
     }
 }
 
 function submitPatientInfo() {
-    addMessage("🏥 Address: Near school Kalewadi Pune\nHospital visiting hours: Morning 10 AM – 1 PM, Evening 6 PM – 10 PM", "bot");
-    addMessage(`Thank you ${patientName}. Will meet you soon.`, "bot");
-    state = "aiChat";
+    addMessage("🏥 Visit: Kalewadi Pune", "bot");
+    addMessage(`Thank you ${patientName}`, "bot");
+    state = "done";
 }
 
 send.onclick = () => {
     const msg = input.value.trim();
     if (!msg) return;
+
     addMessage(msg, "user");
     input.value = "";
 
     if (state === "askName") {
         patientName = msg;
         state = "askMobile";
-        addMessage("Please enter your mobile number:", "bot");
+        addMessage("Enter mobile number:", "bot");
+
     } else if (state === "askMobile") {
         patientMobile = msg;
         state = "askAddress";
-        addMessage("Please enter your address:", "bot");
+        addMessage("Enter address:", "bot");
+
     } else if (state === "askAddress") {
         patientAddress = msg;
         state = "askConsultation";
         addMessage("Select consultation type:", "bot");
         addButtonOptions();
+
     } else if (state === "awaitPayment") {
-        if(msg.toLowerCase() === "paid") {
-            if (qrBubble) {
-                qrBubble.remove(); // remove QR after payment
-                qrBubble = null;
-            }
-            addMessage("✅ Payment confirmed! Starting your online consultation.", "bot");
-            state = "aiChat";
-            addMessage(`Hello ${patientName}, please describe your health problem.`, "bot");
-        } else {
-            addMessage("Please complete payment of ₹179 via GPay/UPI and type 'Paid' once done.", "bot");
-        }
-    } else if(state === "aiChat") {
-        state = "askCall";
-        addMessage("🤖 Thank you for describing your problem. Can we connect on a call to provide better consultation? (Yes / No)", "bot");
-    } else if(state === "askCall") {
-        if(msg.toLowerCase() === "yes") {
-            addMessage("✅ Thank you! Dr. Vinod will call you soon on your provided number.", "bot");
-            state = "done";
-        } else if(msg.toLowerCase() === "no") {
-            addMessage("Okay, thank you for connecting. Feel free to contact us anytime!", "bot");
+        if (msg.toLowerCase() === "paid") {
+            if (qrBubble) qrBubble.remove();
+            addMessage("Payment confirmed ✅", "bot");
             state = "done";
         } else {
-            addMessage("Please type 'Yes' or 'No'.", "bot");
+            addMessage("Please complete payment", "bot");
         }
     }
 };
 
-input.addEventListener("keypress", e => { if(e.key==="Enter") send.click(); });
+input.addEventListener("keypress", e => {
+    if (e.key === "Enter") send.click();
+});
 
 window.onload = function() {
-    addMessage("Thank you for connecting with Dr. Vinod Salunkhe!", "bot");
-    addMessage("Hello! Please enter your name:", "bot");
+    addMessage("Welcome to Sai Clinic 👨‍⚕️", "bot");
+    addMessage("Enter your name:", "bot");
 };
 </script>
 
