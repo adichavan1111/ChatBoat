@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 from langchain_openai import OpenAI
 
 load_dotenv()
-
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 app = FastAPI()
 
