@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sai Clinic - Dr. Vinod (BHMS & Ayurvedic)</title>
+<title>Sai Clinic - Dr.Vinod Salunkhe</title>
 
 <style>
 body {
@@ -14,12 +14,11 @@ body {
 
 /* Chat Container */
 #chat-container {
-    width: 100%;
+    display: flex;
+    flex-direction: column;
     max-width: 500px;
     height: 100vh;
     margin: auto;
-    display: flex;
-    flex-direction: column;
     background: #f0f0f0;
 }
 
@@ -43,7 +42,7 @@ body {
 
 /* Chat Area */
 #chat {
-    flex: 1;
+    flex: 1 1 auto;
     padding: 10px;
     overflow-y: auto;
     background: #ece5dd;
@@ -75,6 +74,10 @@ body {
     display: flex;
     padding: 10px;
     background: #f0f0f0;
+    flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
 }
 
 #input {
@@ -126,8 +129,8 @@ body {
     margin: 10px 0;
 }
 .qr-bubble img {
-    width: 100%;
-    max-width: 250px;
+    max-width: 100%;
+    height: auto;
     border-radius: 15px;
 }
 </style>
@@ -136,7 +139,7 @@ body {
 <body>
 <div id="chat-container">
     <div id="chat-header">
-        Sai Clinic - Dr. Vinod (BHMS & Ayurvedic)
+        Sai Clinic - Dr.Vinod Salunkhe
     </div>
 
     <div id="chat"></div>
@@ -159,13 +162,20 @@ let state = "askName";
 let patientName = "", patientMobile = "", patientAddress = "", consultationType = "";
 let qrBubble = null;
 
+// Scroll helper
+function scrollToBottom() {
+    setTimeout(() => {
+        chatDiv.scrollTop = chatDiv.scrollHeight + 50;
+    }, 100);
+}
+
 // Add message to chat
 function addMessage(msg, sender) {
     const bubble = document.createElement("div");
     bubble.classList.add("bubble", sender);
     bubble.innerText = msg;
     chatDiv.appendChild(bubble);
-    chatDiv.scrollTop = chatDiv.scrollHeight;
+    scrollToBottom();
 }
 
 // Add buttons for consultation
@@ -186,7 +196,7 @@ function addButtonOptions() {
     container.appendChild(btnOnline);
     container.appendChild(btnHome);
     chatDiv.appendChild(container);
-    chatDiv.scrollTop = chatDiv.scrollHeight;
+    scrollToBottom();
 }
 
 // Handle consultation selection
@@ -204,6 +214,7 @@ function selectConsultation(type) {
         chatDiv.appendChild(qrBubble);
         addMessage("After payment, type 'Paid' to confirm.", "bot");
         state = "awaitPayment";
+        scrollToBottom();
     } else {
         addMessage(
             "🏥 Clinic Location: Sai Clinic, Kalewadi, Pune\nTiming: Morning 10:00 AM - 1:00 PM, Evening 6:00 PM - 10:00 PM",
@@ -218,6 +229,7 @@ function selectConsultation(type) {
             "bot"
         );
         state = "done";
+        scrollToBottom();
     }
 }
 
