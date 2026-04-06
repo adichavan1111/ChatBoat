@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sai Clinic - Dr.Vinod(BHMS)</title>
+<title>Sai Clinic - Dr. Vinod (BHMS & Ayurvedic)</title>
 
 <style>
 body {
@@ -12,23 +12,22 @@ body {
     margin: 0;
 }
 
-/* Responsive Chat Container */
+/* Chat Container */
 #chat-container {
     width: 100%;
-    height: 100vh;
     max-width: 500px;
+    height: 100vh;
     margin: auto;
-    background: #f0f0f0;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    background: #f0f0f0;
 }
 
 /* Header */
 #chat-header {
     background-color: #128c7e;
     color: white;
-    padding: 10px;
+    padding: 12px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -48,28 +47,30 @@ body {
     padding: 10px;
     overflow-y: auto;
     background: #ece5dd;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-/* Message bubbles */
+/* Message Bubbles */
 .bubble {
     padding: 10px 15px;
-    margin: 5px 0;
     border-radius: 20px;
     max-width: 75%;
-    clear: both;
+    word-wrap: break-word;
 }
 
 .user {
     background-color: #dcf8c6;
-    float: right;
+    align-self: flex-end;
 }
 
 .bot {
     background-color: #fff;
-    float: left;
+    align-self: flex-start;
 }
 
-/* Input area */
+/* Input Area */
 #input-area {
     display: flex;
     padding: 10px;
@@ -79,7 +80,7 @@ body {
 #input {
     flex: 1;
     padding: 12px;
-    border-radius: 20px;
+    border-radius: 25px;
     border: 1px solid #ccc;
     font-size: 16px;
 }
@@ -92,29 +93,51 @@ body {
     background-color: #128c7e;
     color: white;
     cursor: pointer;
+    min-width: 48px;
+    min-height: 48px;
+    font-size: 18px;
 }
 
 /* Buttons */
-.btn {
-    padding: 10px 15px;
-    margin: 5px;
-    border-radius: 20px;
-    border: none;
-    cursor: pointer;
+.btn-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 10px 0;
 }
 
-.btn-online { background-color: #25d366; color: white; }
-.btn-home { background-color: #34b7f1; color: white; }
+.btn {
+    padding: 12px 20px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+}
 
+.btn-online { background-color: #43a047; color: white; }
+.btn-home { background-color: #0288d1; color: white; }
+
+/* QR Bubble */
+.qr-bubble {
+    text-align: center;
+    margin: 10px 0;
+}
+.qr-bubble img {
+    width: 100%;
+    max-width: 250px;
+    border-radius: 15px;
+}
 </style>
 </head>
 
 <body>
-
 <div id="chat-container">
     <div id="chat-header">
         <img src="https://via.placeholder.com/40">
-        Sai Clinic - Dr.Vinod (BHMS & Ayurvedic)
+        Sai Clinic - Dr. Vinod (BHMS & Ayurvedic)
     </div>
 
     <div id="chat"></div>
@@ -137,6 +160,7 @@ let state = "askName";
 let patientName = "", patientMobile = "", patientAddress = "", consultationType = "";
 let qrBubble = null;
 
+// Add message to chat
 function addMessage(msg, sender) {
     const bubble = document.createElement("div");
     bubble.classList.add("bubble", sender);
@@ -145,12 +169,14 @@ function addMessage(msg, sender) {
     chatDiv.scrollTop = chatDiv.scrollHeight;
 }
 
+// Add buttons for consultation
 function addButtonOptions() {
     const container = document.createElement("div");
+    container.className = "btn-container";
 
     const btnOnline = document.createElement("button");
     btnOnline.className = "btn btn-online";
-    btnOnline.innerText = "Online (₹179)";
+    btnOnline.innerText = "Online Consultation (₹179)";
     btnOnline.onclick = () => selectConsultation("Online");
 
     const btnHome = document.createElement("button");
@@ -161,34 +187,32 @@ function addButtonOptions() {
     container.appendChild(btnOnline);
     container.appendChild(btnHome);
     chatDiv.appendChild(container);
+    chatDiv.scrollTop = chatDiv.scrollHeight;
 }
 
+// Handle consultation selection
 function selectConsultation(type) {
     consultationType = type;
     addMessage(type, "user");
 
     if (type === "Online") {
         qrBubble = document.createElement("div");
-        qrBubble.style.textAlign = "center";
+        qrBubble.className = "qr-bubble";
         qrBubble.innerHTML = `
-        <p>Scan QR & pay ₹179</p>
-        <img src="${qrAPI}" style="width:100%; max-width:250px;">
+            <p>Dear ${patientName}, please scan QR & pay ₹179</p>
+            <img src="${qrAPI}">
         `;
         chatDiv.appendChild(qrBubble);
-
-        addMessage("After payment type 'Paid'", "bot");
+        addMessage("After payment, type 'Paid' to confirm.", "bot");
         state = "awaitPayment";
     } else {
-        submitPatientInfo();
+        addMessage("🏥 Clinic Location: Kalewadi, Pune", "bot");
+        addMessage(`Thank you ${patientName}. Doctor will assist you shortly.`, "bot");
+        state = "done";
     }
 }
 
-function submitPatientInfo() {
-    addMessage("🏥 Visit: Kalewadi Pune", "bot");
-    addMessage(`Thank you ${patientName}`, "bot");
-    state = "done";
-}
-
+// Send button click
 send.onclick = () => {
     const msg = input.value.trim();
     if (!msg) return;
@@ -199,12 +223,12 @@ send.onclick = () => {
     if (state === "askName") {
         patientName = msg;
         state = "askMobile";
-        addMessage("Enter mobile number:", "bot");
+        addMessage("Kindly enter your mobile number for contact purposes:", "bot");
 
     } else if (state === "askMobile") {
         patientMobile = msg;
         state = "askAddress";
-        addMessage("Enter address:", "bot");
+        addMessage("Please provide your address:", "bot");
 
     } else if (state === "askAddress") {
         patientAddress = msg;
@@ -215,23 +239,25 @@ send.onclick = () => {
     } else if (state === "awaitPayment") {
         if (msg.toLowerCase() === "paid") {
             if (qrBubble) qrBubble.remove();
-            addMessage("Payment confirmed ✅", "bot");
+            addMessage("✅ Payment confirmed. Thank you!", "bot");
+            addMessage("Doctor will assist you shortly.", "bot");
             state = "done";
         } else {
-            addMessage("Please complete payment", "bot");
+            addMessage("Please complete the payment to proceed.", "bot");
         }
     }
 };
 
+// Enter key triggers send
 input.addEventListener("keypress", e => {
     if (e.key === "Enter") send.click();
 });
 
+// On load
 window.onload = function() {
     addMessage("Welcome to Sai Clinic 👨‍⚕️", "bot");
-    addMessage("Enter your name:", "bot");
+    addMessage("May I know your full name, please?", "bot");
 };
 </script>
-
 </body>
 </html>
