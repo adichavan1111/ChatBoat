@@ -136,7 +136,6 @@ body {
 <body>
 <div id="chat-container">
     <div id="chat-header">
-        <img src="https://via.placeholder.com/40">
         Sai Clinic - Dr. Vinod (BHMS & Ayurvedic)
     </div>
 
@@ -199,15 +198,25 @@ function selectConsultation(type) {
         qrBubble = document.createElement("div");
         qrBubble.className = "qr-bubble";
         qrBubble.innerHTML = `
-            <p>Dear ${patientName}, please scan QR & pay ₹179</p>
+            <p>Dear ${patientName}, please scan the QR code & pay ₹179.</p>
             <img src="${qrAPI}">
         `;
         chatDiv.appendChild(qrBubble);
         addMessage("After payment, type 'Paid' to confirm.", "bot");
         state = "awaitPayment";
     } else {
-        addMessage("🏥 Clinic Location: Kalewadi, Pune", "bot");
-        addMessage(`Thank you ${patientName}. Doctor will assist you shortly.`, "bot");
+        addMessage(
+            "🏥 Clinic Location: Sai Clinic, Kalewadi, Pune\nTiming: Morning 10:00 AM - 1:00 PM, Evening 6:00 PM - 10:00 PM",
+            "bot"
+        );
+        addMessage(
+            "Please bring your previous health documents when visiting the clinic. This will help us provide better care.",
+            "bot"
+        );
+        addMessage(
+            `Thank you ${patientName}. Will meet you soon. Take care! (Emergency contact: 7588225403)`,
+            "bot"
+        );
         state = "done";
     }
 }
