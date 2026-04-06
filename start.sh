@@ -1,1 +1,1 @@
- uvicorn AIAgent:app --reload --port 9000
+uvicorn AIAgent:app --host 0.0.0.0 --port $PORT
