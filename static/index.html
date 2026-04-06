@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sai Clinic - Dr.Vinod Salunkhe</title>
+<title>Sai Clinic - Dr. Vinod (BHMS & Ayurvedic)</title>
 
 <style>
 body {
@@ -11,8 +11,6 @@ body {
     background: #d9fdd3;
     margin: 0;
 }
-
-/* Chat Container */
 #chat-container {
     display: flex;
     flex-direction: column;
@@ -21,8 +19,6 @@ body {
     margin: auto;
     background: #f0f0f0;
 }
-
-/* Header */
 #chat-header {
     background-color: #128c7e;
     color: white;
@@ -33,14 +29,7 @@ body {
     font-size: 16px;
     flex-wrap: wrap;
 }
-
-#chat-header img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-}
-
-/* Chat Area */
+#chat-header img { width: 40px; height: 40px; border-radius: 50%; }
 #chat {
     flex: 1 1 auto;
     padding: 10px;
@@ -50,26 +39,9 @@ body {
     flex-direction: column;
     gap: 8px;
 }
-
-/* Message Bubbles */
-.bubble {
-    padding: 10px 15px;
-    border-radius: 20px;
-    max-width: 75%;
-    word-wrap: break-word;
-}
-
-.user {
-    background-color: #dcf8c6;
-    align-self: flex-end;
-}
-
-.bot {
-    background-color: #fff;
-    align-self: flex-start;
-}
-
-/* Input Area */
+.bubble { padding: 10px 15px; border-radius: 20px; max-width: 75%; word-wrap: break-word; }
+.user { background-color: #dcf8c6; align-self: flex-end; }
+.bot { background-color: #fff; align-self: flex-start; }
 #input-area {
     display: flex;
     padding: 10px;
@@ -79,15 +51,7 @@ body {
     bottom: 0;
     z-index: 10;
 }
-
-#input {
-    flex: 1;
-    padding: 12px;
-    border-radius: 25px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-}
-
+#input { flex: 1; padding: 12px; border-radius: 25px; border: 1px solid #ccc; font-size: 16px; }
 #send {
     margin-left: 10px;
     padding: 12px;
@@ -100,50 +64,22 @@ body {
     min-height: 48px;
     font-size: 18px;
 }
-
-/* Buttons */
-.btn-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 10px 0;
-}
-
-.btn {
-    padding: 12px 20px;
-    border-radius: 25px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
-    width: 100%;
-    text-align: center;
-}
-
+.btn-container { display: flex; flex-direction: column; gap: 10px; margin: 10px 0; }
+.btn { padding: 12px 20px; border-radius: 25px; border: none; cursor: pointer; font-weight: bold; font-size: 14px; width: 100%; text-align: center; }
 .btn-online { background-color: #43a047; color: white; }
 .btn-home { background-color: #0288d1; color: white; }
-
-/* QR Bubble */
-.qr-bubble {
-    text-align: center;
-    margin: 10px 0;
-}
-.qr-bubble img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 15px;
-}
+.qr-bubble { text-align: center; margin: 10px 0; }
+.qr-bubble img { max-width: 100%; height: auto; border-radius: 15px; }
 </style>
 </head>
 
 <body>
 <div id="chat-container">
     <div id="chat-header">
-        Sai Clinic - Dr.Vinod Salunkhe
+        <img src="https://via.placeholder.com/40">
+        Sai Clinic - Dr. Vinod (BHMS & Ayurvedic)
     </div>
-
     <div id="chat"></div>
-
     <div id="input-area">
         <input id="input" type="text" placeholder="Type a message..." />
         <button id="send">➤</button>
@@ -155,8 +91,8 @@ const chatDiv = document.getElementById("chat");
 const input = document.getElementById("input");
 const send = document.getElementById("send");
 
-const whatsappLink = "https://wa.me/919876543210?text=Hello%20Doctor";
-const qrAPI = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(whatsappLink)}`;
+const whatsappDoctorNumber = "8999417947"; // Replace with doctor’s number
+const qrAPI = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://wa.me/${whatsappDoctorNumber}`;
 
 let state = "askName";
 let patientName = "", patientMobile = "", patientAddress = "", consultationType = "";
@@ -164,9 +100,7 @@ let qrBubble = null;
 
 // Scroll helper
 function scrollToBottom() {
-    setTimeout(() => {
-        chatDiv.scrollTop = chatDiv.scrollHeight + 50;
-    }, 100);
+    setTimeout(() => { chatDiv.scrollTop = chatDiv.scrollHeight + 50; }, 100);
 }
 
 // Add message to chat
@@ -213,8 +147,8 @@ function selectConsultation(type) {
         `;
         chatDiv.appendChild(qrBubble);
         addMessage("After payment, type 'Paid' to confirm.", "bot");
-        state = "awaitPayment";
         scrollToBottom();
+        state = "awaitPayment";
     } else {
         addMessage(
             "🏥 Clinic Location: Sai Clinic, Kalewadi, Pune\nTiming: Morning 10:00 AM - 1:00 PM, Evening 6:00 PM - 10:00 PM",
@@ -260,9 +194,28 @@ send.onclick = () => {
     } else if (state === "awaitPayment") {
         if (msg.toLowerCase() === "paid") {
             if (qrBubble) qrBubble.remove();
-            addMessage("✅ Payment confirmed. Thank you!", "bot");
-            addMessage("Doctor will assist you shortly.", "bot");
-            state = "done";
+            addMessage("✅ Payment received. Processing, please wait 5 minutes...", "bot");
+
+            // Wait 5 minutes (300,000 ms)
+            setTimeout(() => {
+                // Notify doctor via WhatsApp
+                const doctorMessage = `📩 New Patient Alert!
+Name: ${patientName}
+Mobile: ${patientMobile}
+Consultation: ${consultationType}`;
+                const doctorWhatsAppURL = `https://wa.me/${whatsappDoctorNumber}?text=${encodeURIComponent(doctorMessage)}`;
+                window.open(doctorWhatsAppURL, "_blank"); // Open WhatsApp for doctor
+
+                addMessage("✅ Doctor has been notified.", "bot");
+
+                // Provide patient WhatsApp link
+                const patientMessage = `💬 Click here to contact clinic on WhatsApp: https://wa.me/${whatsappDoctorNumber}?text=Hello%20Dr.Vinod,%20I%20have%20completed%20payment.`;
+                addMessage(patientMessage, "bot");
+
+                addMessage("Doctor will assist you shortly.", "bot");
+                state = "done";
+                scrollToBottom();
+            }, 10000); // 5 minutes delay
         } else {
             addMessage("Please complete the payment to proceed.", "bot");
         }
